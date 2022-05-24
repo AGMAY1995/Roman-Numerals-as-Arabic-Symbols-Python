@@ -1,2 +1,179 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+def getRoman1():#function to get the first roman numeral
+    first_roman = input("Enter First Roman Number (no spaces): ").upper()
+    while first_roman.find(" ") > 0:
+        print("Invalid Roman Numeral. Try again.")
+        first_roman = input("Enter First Roman Number (no spaces): ").upper()
+    return first_roman
+    
+def getRoman2():# function to get the second roman numeral
+    second_roman = input("Enter Second Roman Number (no spaces): ").upper()
+    while second_roman.find(" ") > 0:
+        print("Invalid Roman Numeral. Try again.")
+        second_roman = input("Enter Second Roman Number (no spaces): ").upper()
+    return second_roman
+
+def isValidRoman(numeral): #checking if the roman numeral is valid or not
+    validRomanNumerals = ["C", "L", "X", "V", "I"]
+    for letters in numeral:
+        if letters not in validRomanNumerals:
+            print("Sorry that is not a valid roman numeral")
+            return False
+#converting a roman numeral to arabic
+def romanToArabic(roman):
+    #CONSTANTS
+    C_ARABIC = 100
+    L_ARABIC = 50
+    X_ARABIC = 10
+    V_ARABIC = 5
+    I_ARABIC = 1
+    sum = 0
+    last_character = ''
+    for character in roman[::-1]:   #searches through each character of userInput1 string                                        
+    #and converts character ot equivalent decimal value
+        if character == 'C' :
+            sum += C_ARABIC
+        if character == 'L' :
+            sum += L_ARABIC
+        if character == 'X' :
+            if last_character in ['C', 'L']:    
+                sum -= X_ARABIC
+            else:
+                sum += X_ARABIC   #if X in input, assign last_character X
+        if character == 'V' :
+            sum += V_ARABIC
+        if character == 'I' :
+            if last_character in ['V','X']:
+                sum -= I_ARABIC
+            else:
+                sum += I_ARABIC
+        last_character = character
+    return sum
+#converting an arabic number to roman numeral
+def arabicToRoman(arabic):
+    val = [
+            100, 90, 50, 40,
+            10, 9, 5, 4,
+            1
+            ]
+    syb = [
+        "C", "XC", "L", "XL",
+        "X", "IX", "V", "IV",
+        "I"
+        ]
+    roman = ''
+    i = 0
+    while  arabic > 0:
+        for _ in range(arabic // val[i]):
+            roman += syb[i]
+            arabic -= val[i]
+        i += 1
+    return roman 
+#addition function
+def add(int1, int2):
+    total = int1 + int2
+    return total 
+#subtraction function
+def sub(int1, int2):
+    total = int1 - int2
+    return total
+#multiplication function
+def mul(int1, int2):
+    total = int1 * int2
+    return total
+#divison function
+def div(int1, int2):
+    total_division = 0
+    remainder_division= 0
+    total_division = int1 // int2
+    remainder_division = int1 % int2
+    return [total_division, remainder_division]
+
+def menu():
+    #printing the menu
+    print("Welcome to the Roman Numerals Calculator")
+    selection = input("Please select from the following:\n\n"
+                          "A- Add two Roman Numerals.\n"
+                          "S- Subtract two Roman Numerals\n"
+                          "M- Multiply two Roman Numerals\n"
+                          "D- Divide two Roman Numerals\n"
+                          "Q- Quit\n\n"
+                          "Select A, S, M, D or Q only.\n").upper() #capitalizing the input to go with the code in the program
+    #acceptable letters in the menu
+    acceptable_letters = ["A", "S", "M", "D", "Q"]
+    #a loop that repeats the menu if the user inputted an invalid entry
+    while (selection not in acceptable_letters):
+        print("Invalid entry. Please try again.\n")
+        selection = input("Please select from the following:\n\n"
+                          "A- Add two Roman Numerals.\n"
+                          "S- Subtract two Roman Numerals\n"
+                          "M- Multiply two Roman Numerals\n"
+                          "D- Divide two Roman Numerals\n"
+                          "Q- Quit\n\n"
+                          "Select A, S, M, D or Q only.\n").upper()
+    return selection
+#main function
+def main():
+    #calling the menu 
+    selection = menu()
+    print()
+    #while the selection of menu is not Q
+    #checking if the program should re-iterate
+    while selection != "Q":
+        #calling for the first roman numeral to be inputted
+        roman1 = getRoman1()
+        #converting the roman numeral to arabic
+        arabic_roman1 = romanToArabic(roman1)
+        #converting arabic number to numeral
+        final_roman1 = arabicToRoman(arabic_roman1)
+        #printing the roman numeral and arabic number for number 1
+        print(f"Value of {roman1} : {arabic_roman1}")
+        #calling for the second roman numeral to be inputted
+        roman2 = getRoman2()
+        #converting the roman numeral to arabic
+        arabic_roman2 = romanToArabic(roman2)
+        #printing the roman numeral and arabic number
+        final_roman2 = arabicToRoman(arabic_roman2)
+        #printing the roman numeral and arabic number for number 1
+        print(f"Value of {roman2} : {arabic_roman2}\n")
+        if selection == "A":#checking if selection is A for addition
+            addition_integers = add(arabic_roman1, arabic_roman2) #calling function to add two integers together
+            addition_total_numeral = arabicToRoman(addition_integers) #calling function to convert to roman 
+            print(f"{final_roman1} + {final_roman2} = {addition_total_numeral}") #printing both roman and arabic numbers
+            print(f"{arabic_roman1} + {arabic_roman2} = {addition_integers}\n")
+        elif selection == "S": #if selection is S for subtraction
+            if arabic_roman1 > arabic_roman2: #checking which is the biggest number in order to not have a negative number
+                subtraction_integers = sub(arabic_roman1, arabic_roman2) #calling the subtraction function
+                subtraction_total_numeral = arabicToRoman(subtraction_integers) #converting arabic numbers to integers
+                print(f"{final_roman1} - {final_roman2} = {subtraction_total_numeral}") #printing the result in both arabic a roman numeral
+                print(f"{arabic_roman1} - {arabic_roman2} = {subtraction_integers}\n")
+            else: #if first number is not bigger than second number
+                subtraction_integers = sub(arabic_roman2, arabic_roman1)
+                subtraction_total_numeral = arabicToRoman(subtraction_integers)
+                print(f"{final_roman2} - {final_roman1} = {subtraction_total_numeral}")
+                print(f"{arabic_roman2} - {arabic_roman1} = {subtraction_integers}\n")
+        elif selection == "M": #checking if selection is M for multiplication
+            multiplied_integers = mul(arabic_roman1, arabic_roman2) #calling the multiplication function
+            multiplied_total_numeral = arabicToRoman(multiplied_integers) #converting final result to roman numeral form
+            print(f"{final_roman1} * {final_roman2} = {multiplied_total_numeral}") #printing final result 
+            print(f"{arabic_roman1} * {arabic_roman2} = {multiplied_integers}\n")
+        elif selection == "D":#checking if the selection is D for division
+            division_integers = div(arabic_roman1, arabic_roman2) #calling the division function with two parameters
+            division_total_numeral = arabicToRoman(division_integers[0]) #converting an arabic symbol to a numeral using the list returned
+            division_remainder_numeral = arabicToRoman(division_integers[1])#converting the remainder into a roman numeral from the list that was returned
+            #checking if there is remainder with division
+            if division_integers[1] == 0: #division with remainder
+                print(f"{final_roman1} / {final_roman2} = {division_total_numeral}")
+                print(f"{arabic_roman1} / {arabic_roman2} = {division_integers[0]}\n")
+            else:#division with remainder
+                print(f"{final_roman1} / {final_roman2} = {division_total_numeral} R{division_remainder_numeral}")
+                print(f"{arabic_roman1} / {arabic_roman2} = {division_integers[0]} R{division_integers[1]}\n")
+        #calling the menu function again to determine if the code will run again or quit
+        selection = menu()
+    #a good bye statement if selection is Q or q
+    print("Good Bye.")
+#print line to make the code neater
+print()
+#calls the main function and gets the program running
+main()
